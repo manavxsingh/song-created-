@@ -1,0 +1,91 @@
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ChammakChalloSong.java
+ * A simple console "music player" that prints a song line by line.
+ */
+public class ChammakChalloSong {
+
+    // ---------- Model ----------
+    static class Line {
+        String text;
+        int delayMs;   // how long to "hold" the line
+
+        Line(String text, int delayMs) {
+            this.text = text;
+            this.delayMs = delayMs;
+        }
+    }
+
+    static class Song {
+        private final String title;
+        private final String artist;
+        private final List<Line> lyrics = new ArrayList<>();
+
+        Song(String title, String artist) {
+            this.title = title;
+            this.artist = artist;
+        }
+
+        Song add(String text) {
+            return add(text, 600);
+        }
+
+        Song add(String text, int delayMs) {
+            lyrics.add(new Line(text, delayMs));
+            return this;   // method chaining
+        }
+
+        void play() {
+            System.out.println("=".repeat(40));
+            System.out.println("  Now Playing : " + title);
+            System.out.println("  Artist      : " + artist);
+            System.out.println("=".repeat(40));
+            System.out.println();
+
+            for (Line line : lyrics) {
+                System.out.println("  " + line.text);
+                sleep(line.delayMs);
+            }
+
+            System.out.println();
+            System.out.println("  [ End of song ]");
+        }
+
+        private void sleep(int ms) {
+            try {
+                Thread.sleep(ms);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    // ---------- Main ----------
+    public static void main(String[] args) {
+
+        Song song = new Song("Chammak Challo", "Akon & Hamsika Iyer");
+
+        // Intro
+        song.add("♪ ... intro beat ... ♪", 800);
+
+        // Hook
+        song.add("Chammak challo!", 700);
+        song.add("Chammak challo!", 700);
+
+        // Verse placeholders — replace with your own text
+        for (int i = 1; i <= 4; i++) {
+            song.add("[ verse line " + i + " ]", 500);
+        }
+
+        // Chorus repeated 3 times
+        for (int i = 0; i < 3; i++) {
+            song.add("Chammak challo!", 600);
+        }
+
+        song.add("♪ ... outro ... ♪", 900);
+
+        song.play();
+    }
+}
